@@ -1,0 +1,280 @@
+mysql> CREATE DATABASE CineStream;
+Query OK, 1 row affected (0.05 sec)
+
+mysql> USE CineStream;
+Database changed
+mysql> Create Table Movies(
+    -> movie_id INT AUTO_INCREMENT PRIMARY KEY,
+    -> title VARCHAR(100) NOT NULL,
+    -> genre VARCHAR(100) NOT NULL,
+    -> release_year INT,
+    -> rental_rate DECIMAL);
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> SELECT* FROM Movies;
+Empty set (0.01 sec)
+
+mysql> Create Table Users(
+    ->  user_id INT AUTO_INCREMENT PRIMARY KEY,
+    -> username VARCHAR(100) UNIQUE NOT NULL,
+    -> email VARCHAR(150) UNIQUE NOT NULL,
+    ->  join_date DATE,
+    -> status VARCHAR(20) CHECK (status IN ('Active', 'Inactive'))
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> Create Table WatchLog(
+    ->  log_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->  user_id INT,
+    -> movie_id INT,
+    -> watch_date DATETIME,
+    ->  duration_minutes INT,
+    -> FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    ->  FOREIGN KEY (movie_id) REFERENCES Movies(movie_id)
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> desc Movies;
++--------------+---------------+------+-----+---------+----------------+
+| Field        | Type          | Null | Key | Default | Extra          |
++--------------+---------------+------+-----+---------+----------------+
+| movie_id     | int           | NO   | PRI | NULL    | auto_increment |
+| title        | varchar(100)  | NO   |     | NULL    |                |
+| genre        | varchar(100)  | NO   |     | NULL    |                |
+| release_year | int           | YES  |     | NULL    |                |
+| rental_rate  | decimal(10,0) | YES  |     | NULL    |                |
++--------------+---------------+------+-----+---------+----------------+
+5 rows in set (0.04 sec)
+
+mysql> desc WatchLog;
++------------------+----------+------+-----+---------+----------------+
+| Field            | Type     | Null | Key | Default | Extra          |
++------------------+----------+------+-----+---------+----------------+
+| log_id           | int      | NO   | PRI | NULL    | auto_increment |
+| user_id          | int      | YES  | MUL | NULL    |                |
+| movie_id         | int      | YES  | MUL | NULL    |                |
+| watch_date       | datetime | YES  |     | NULL    |                |
+| duration_minutes | int      | YES  |     | NULL    |                |
++------------------+----------+------+-----+---------+----------------+
+5 rows in set (0.02 sec)
+
+mysql> desc Users;
++-----------+--------------+------+-----+---------+----------------+
+| Field     | Type         | Null | Key | Default | Extra          |
++-----------+--------------+------+-----+---------+----------------+
+| user_id   | int          | NO   | PRI | NULL    | auto_increment |
+| username  | varchar(100) | NO   | UNI | NULL    |                |
+| email     | varchar(150) | NO   | UNI | NULL    |                |
+| join_date | date         | YES  |     | NULL    |                |
+| status    | varchar(20)  | YES  |     | NULL    |                |
++-----------+--------------+------+-----+---------+----------------+
+5 rows in set (0.02 sec)
+
+mysql>  Insert into Movies
+    ->  values
+    ->  (001,'Interstellar', 'Sci-Fi', 2014, 4.99),
+    ->  (002,'Inception', 'Sci-Fi', 2010, 4.50),
+    ->  (003,'The Dark Knight', 'Action', 2008, 3.99),
+    -> (004,'How to lose a guy in 10 days','Romcom',2006,4.89),
+    ->  (005,'The Game of Thrones','Fantasy',2011,4.99),
+    ->  (006,'Titanic', 'Romance', 1997, 3.50),
+    ->  (007,'Parasite', 'Drama', 2019, 4.80),
+    -> (008,'The Notebook', 'Romance', 2004, 3.00),
+    ->  (009,'Off Campus','Drama',2026,4.98),
+    ->  (010,'10 things i hate about you','Romcom',1999,4.99);
+Query OK, 10 rows affected, 9 warnings (0.03 sec)
+Records: 10  Duplicates: 0  Warnings: 9
+
+mysql> INSERT into Users
+    -> values
+    -> (001,'johndoe123', 'johndoe123@gmail.com', '2025-01-15', 'Inactive'),
+    -> (002,'janesmith', 'janesmith@gmail.com', '2025-02-10', 'Active'),
+    -> (003,'arshiya03','arshiya03@gmail.com','2025-03-10','Active'),
+    -> (004,'emilydavis', 'emilydavis@gmail.com', '2025-03-05', 'Active'),
+    -> (005,'alexwilson', 'alexwilson@gmail.com', '2025-04-12', 'Inactive'),
+    -> (006,'davidmartin', 'davidmartin@gmail.com', '2024-12-18', 'Inactive'),
+    -> (007,'chloeharris', 'chloeharris@gmail.com', '2024-09-30', 'Inactive'),
+    -> (008,'sophiaturner', 'sophiaturner@gmail.com', '2024-10-09', 'Active'),
+    -> (009,'ryanlewis', 'ryanlewis@gmail.com', '2025-05-14', 'Active'),
+    -> (010,'nathanking', 'nathanking@gmail.com', '2024-12-05', 'Inactive');
+Query OK, 10 rows affected (0.03 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO WatchLog
+    ->  values
+    -> (1,2,1,'2026-06-01 18:30:00',169),
+    -> (2,4,2,'2026-06-02 20:00:00',148),
+    -> (3,6,3,'2026-06-03 19:15:00',152),
+    -> (4,8,4,'2026-06-04 21:00:00',181),
+    -> (5,9,5,'2026-06-05 17:45:00',120),
+    -> (6,3,1,'2026-06-06 18:00:00',169),
+    -> (7,5,7,'2026-06-07 20:30:00',122),
+    -> (8,7,8,'2026-06-08 19:00:00',132),
+    -> (9,10,10,'2026-06-09 21:15:00',148),
+    -> (10,1,4,'2026-06-10 16:45:00',181);
+Query OK, 10 rows affected (0.02 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM MOVIES;
++----------+------------------------------+---------+--------------+-------------+
+| movie_id | title                        | genre   | release_year | rental_rate |
++----------+------------------------------+---------+--------------+-------------+
+|        1 | Interstellar                 | Sci-Fi  |         2014 |           5 |
+|        2 | Inception                    | Sci-Fi  |         2010 |           5 |
+|        3 | The Dark Knight              | Action  |         2008 |           4 |
+|        4 | How to lose a guy in 10 days | Romcom  |         2006 |           5 |
+|        5 | The Game of Thrones          | Fantasy |         2011 |           5 |
+|        6 | Titanic                      | Romance |         1997 |           4 |
+|        7 | Parasite                     | Drama   |         2019 |           5 |
+|        8 | The Notebook                 | Romance |         2004 |           3 |
+|        9 | Off Campus                   | Drama   |         2026 |           5 |
+|       10 | 10 things i hate about you   | Romcom  |         1999 |           5 |
++----------+------------------------------+---------+--------------+-------------+
+10 rows in set (0.03 sec)
+
+mysql> SELECT*FROM USERS;
++---------+--------------+------------------------+------------+----------+
+| user_id | username     | email                  | join_date  | status   |
++---------+--------------+------------------------+------------+----------+
+|       1 | johndoe123   | johndoe123@gmail.com   | 2025-01-15 | Inactive |
+|       2 | janesmith    | janesmith@gmail.com    | 2025-02-10 | Active   |
+|       3 | arshiya03    | arshiya03@gmail.com    | 2025-03-10 | Active   |
+|       4 | emilydavis   | emilydavis@gmail.com   | 2025-03-05 | Active   |
+|       5 | alexwilson   | alexwilson@gmail.com   | 2025-04-12 | Inactive |
+|       6 | davidmartin  | davidmartin@gmail.com  | 2024-12-18 | Inactive |
+|       7 | chloeharris  | chloeharris@gmail.com  | 2024-09-30 | Inactive |
+|       8 | sophiaturner | sophiaturner@gmail.com | 2024-10-09 | Active   |
+|       9 | ryanlewis    | ryanlewis@gmail.com    | 2025-05-14 | Active   |
+|      10 | nathanking   | nathanking@gmail.com   | 2024-12-05 | Inactive |
++---------+--------------+------------------------+------------+----------+
+10 rows in set (0.02 sec)
+
+mysql> SELECT *FROM WATCHLOG;
++--------+---------+----------+---------------------+------------------+
+| log_id | user_id | movie_id | watch_date          | duration_minutes |
++--------+---------+----------+---------------------+------------------+
+|      1 |       2 |        1 | 2026-06-01 18:30:00 |              169 |
+|      2 |       4 |        2 | 2026-06-02 20:00:00 |              148 |
+|      3 |       6 |        3 | 2026-06-03 19:15:00 |              152 |
+|      4 |       8 |        4 | 2026-06-04 21:00:00 |              181 |
+|      5 |       9 |        5 | 2026-06-05 17:45:00 |              120 |
+|      6 |       3 |        1 | 2026-06-06 18:00:00 |              169 |
+|      7 |       5 |        7 | 2026-06-07 20:30:00 |              122 |
+|      8 |       7 |        8 | 2026-06-08 19:00:00 |              132 |
+|      9 |      10 |       10 | 2026-06-09 21:15:00 |              148 |
+|     10 |       1 |        4 | 2026-06-10 16:45:00 |              181 |
++--------+---------+----------+---------------------+------------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT * FROM USERS
+    -> WHERE join_date > '2025-01-01'
+    -> AND status = 'Active';
++---------+------------+----------------------+------------+--------+
+| user_id | username   | email                | join_date  | status |
++---------+------------+----------------------+------------+--------+
+|       2 | janesmith  | janesmith@gmail.com  | 2025-02-10 | Active |
+|       3 | arshiya03  | arshiya03@gmail.com  | 2025-03-10 | Active |
+|       4 | emilydavis | emilydavis@gmail.com | 2025-03-05 | Active |
+|       9 | ryanlewis  | ryanlewis@gmail.com  | 2025-05-14 | Active |
++---------+------------+----------------------+------------+--------+
+4 rows in set (0.02 sec)
+
+mysql> UPDATE Users
+    -> SET status = 'Active'
+    -> WHERE username = 'johndoe123'
+    -> AND status = 'Inactive';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT*FROM USERS;
++---------+--------------+------------------------+------------+----------+
+| user_id | username     | email                  | join_date  | status   |
++---------+--------------+------------------------+------------+----------+
+|       1 | johndoe123   | johndoe123@gmail.com   | 2025-01-15 | Active   |
+|       2 | janesmith    | janesmith@gmail.com    | 2025-02-10 | Active   |
+|       3 | arshiya03    | arshiya03@gmail.com    | 2025-03-10 | Active   |
+|       4 | emilydavis   | emilydavis@gmail.com   | 2025-03-05 | Active   |
+|       5 | alexwilson   | alexwilson@gmail.com   | 2025-04-12 | Inactive |
+|       6 | davidmartin  | davidmartin@gmail.com  | 2024-12-18 | Inactive |
+|       7 | chloeharris  | chloeharris@gmail.com  | 2024-09-30 | Inactive |
+|       8 | sophiaturner | sophiaturner@gmail.com | 2024-10-09 | Active   |
+|       9 | ryanlewis    | ryanlewis@gmail.com    | 2025-05-14 | Active   |
+|      10 | nathanking   | nathanking@gmail.com   | 2024-12-05 | Inactive |
++---------+--------------+------------------------+------------+----------+
+10 rows in set (0.00 sec)
+
+mysql> DELETE FROM Users
+    -> WHERE status = 'Inactive'
+    -> AND user_id NOT IN (
+    ->  SELECT DISTINCT user_id
+    -> FROM WatchLog
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> SELECT *FROM USERS;
++---------+--------------+------------------------+------------+----------+
+| user_id | username     | email                  | join_date  | status   |
++---------+--------------+------------------------+------------+----------+
+|       1 | johndoe123   | johndoe123@gmail.com   | 2025-01-15 | Active   |
+|       2 | janesmith    | janesmith@gmail.com    | 2025-02-10 | Active   |
+|       3 | arshiya03    | arshiya03@gmail.com    | 2025-03-10 | Active   |
+|       4 | emilydavis   | emilydavis@gmail.com   | 2025-03-05 | Active   |
+|       5 | alexwilson   | alexwilson@gmail.com   | 2025-04-12 | Inactive |
+|       6 | davidmartin  | davidmartin@gmail.com  | 2024-12-18 | Inactive |
+|       7 | chloeharris  | chloeharris@gmail.com  | 2024-09-30 | Inactive |
+|       8 | sophiaturner | sophiaturner@gmail.com | 2024-10-09 | Active   |
+|       9 | ryanlewis    | ryanlewis@gmail.com    | 2025-05-14 | Active   |
+|      10 | nathanking   | nathanking@gmail.com   | 2024-12-05 | Inactive |
++---------+--------------+------------------------+------------+----------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT*FROM WATCHLOG;
++--------+---------+----------+---------------------+------------------+
+| log_id | user_id | movie_id | watch_date          | duration_minutes |
++--------+---------+----------+---------------------+------------------+
+|      1 |       2 |        1 | 2026-06-01 18:30:00 |              169 |
+|      2 |       4 |        2 | 2026-06-02 20:00:00 |              148 |
+|      3 |       6 |        3 | 2026-06-03 19:15:00 |              152 |
+|      4 |       8 |        4 | 2026-06-04 21:00:00 |              181 |
+|      5 |       9 |        5 | 2026-06-05 17:45:00 |              120 |
+|      6 |       3 |        1 | 2026-06-06 18:00:00 |              169 |
+|      7 |       5 |        7 | 2026-06-07 20:30:00 |              122 |
+|      8 |       7 |        8 | 2026-06-08 19:00:00 |              132 |
+|      9 |      10 |       10 | 2026-06-09 21:15:00 |              148 |
+|     10 |       1 |        4 | 2026-06-10 16:45:00 |              181 |
++--------+---------+----------+---------------------+------------------+
+10 rows in set (0.00 sec)
+
+mysql> DELETE FROM WatchLog
+    -> WHERE user_id IN (1, 5, 6, 7, 10);
+Query OK, 5 rows affected (0.03 sec)
+
+mysql> SELECT*FROM WATCHLOG;
++--------+---------+----------+---------------------+------------------+
+| log_id | user_id | movie_id | watch_date          | duration_minutes |
++--------+---------+----------+---------------------+------------------+
+|      1 |       2 |        1 | 2026-06-01 18:30:00 |              169 |
+|      2 |       4 |        2 | 2026-06-02 20:00:00 |              148 |
+|      4 |       8 |        4 | 2026-06-04 21:00:00 |              181 |
+|      5 |       9 |        5 | 2026-06-05 17:45:00 |              120 |
+|      6 |       3 |        1 | 2026-06-06 18:00:00 |              169 |
++--------+---------+----------+---------------------+------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->  m.genre AS Genre,
+    ->  COUNT(w.log_id) AS Total_Watch_Count
+    -> FROM WatchLog w
+    -> INNER JOIN Movies m
+    -> ON w.movie_id = m.movie_id
+    -> GROUP BY m.genre
+    -> ORDER BY Total_Watch_Count DESC;
++---------+-------------------+
+| Genre   | Total_Watch_Count |
++---------+-------------------+
+| Sci-Fi  |                 3 |
+| Romcom  |                 1 |
+| Fantasy |                 1 |
++---------+-------------------+
+3 rows in set (0.02 sec)
+
